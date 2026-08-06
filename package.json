@@ -1,0 +1,32 @@
+{
+  "name": "qdrant-sync",
+  "version": "1.0.0",
+  "bin": {
+    "qdrant-sync": "./dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/cli.ts src/index.ts --format cjs --dts --outDir dist --clean"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.js"
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.2",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@qdrant/js-client-rest": "^1.19.0",
+    "dotenv": "^17.4.2",
+    "jiti": "^2.7.0",
+    "yaml": "^2.9.0",
+    "zod": "^4.4.3"
+  }
+}
