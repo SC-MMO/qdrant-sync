@@ -14,23 +14,33 @@ function readMultipleSchemas(path: string) {
     .map((file) => readOneSchema(Path.join(path, file)));
 }
 
-export function readFromSchema(path: string) {
+export function readFromSchema(
+  path: string,
+  selectedCollections: string[] | null = null,
+) {
   const isFile = fs.statSync(path).isFile();
 
   const collections = isFile
     ? readOneSchema(path)
     : readMultipleSchemas(path).reduce((acc, obj) => ({ ...acc, ...obj }), {});
 
-  const collectionMap = Object.fromEntries(
-    Object.entries(collections).map(([key, value]) => {
-      const parsed = CanonicalCollectionSchema.safeParse(value);
+  const filteredCollections =
+    selectedCollections === null
+      ? collections
+      : Object.fromEntries(
+          Object.entries(collections).filter(([key]) =>
+            selectedCollections.includes(key),
+          ),
+        );
 
+  const collectionMap = Object.fromEntries(
+    Object.entries(filteredCollections).map(([key, value]) => {
+      const parsed = CanonicalCollectionSchema.safeParse(value);
       if (!parsed.success) {
         throw new Error(
           `Invalid schema for collection "${key}":\n${parsed.error.message}`,
         );
       }
-
       return [key, parsed.data];
     }),
   );

@@ -5,6 +5,7 @@ export type QdrantSyncConfig = {
     url: string;
     apiKey?: string;
   };
+  selectedCollections: string[] | null;
 };
 
 import { z } from "zod";

@@ -19,7 +19,7 @@ export function runSnap(args: string[]) {
   console.log(`Determined origin to be ${origin}`);
 
   console.log("Reading config...");
-  const data = readFromSchema(origin);
+  const data = readFromSchema(origin, CONFIG.selectedCollections);
 
   console.log("Writing snap...");
   const snapPath = path.resolve(CONFIG.snaps, snapName(args[0]));
