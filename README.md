@@ -57,6 +57,7 @@ qdrant-sync snap before-change
 ```
 
 Stores the current local schema in `qdrant-sync/snaps/`.
+> The name of the snap gets formatted as `${timestamp}_${name}_${uuid}.yaml`
 
 ### Push the local schema to Qdrant
 
