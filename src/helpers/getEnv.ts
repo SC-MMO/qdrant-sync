@@ -1,22 +1,22 @@
-import { config } from "dotenv";
+import { config } from 'dotenv';
 config();
 
 export function readKey(key: string): string {
-  const value = process.env[key];
+	const value = process.env[key];
 
-  if (!value) {
-    return "";
-  }
+	if (!value) {
+		return '';
+	}
 
-  return value;
+	return value;
 }
 
 export function readKeyOrThrow(key: string): string {
-  const value = process.env[key];
+	const value = process.env[key];
 
-  if (!value) {
-    throw new Error(`Environment variable ${key} is missing or empty`);
-  }
+	if (!value) {
+		throw new Error(`Environment variable ${key} is missing or empty`);
+	}
 
-  return value;
+	return value;
 }
