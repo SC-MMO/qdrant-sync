@@ -12,15 +12,15 @@ switch (command) {
     runInit();
     break;
   case "pull":
-    runPull();
+    void runPull();
     break;
   case "snap":
-    runSnap(args);
+    void runSnap(args);
     break;
   case "push":
-    runPush(args);
+    void runPush(args);
     break;
-  default:
+  case undefined:
     console.error(
       "Usage: qdrant-sync <init | pull | snap <name> | push <snap?>",
     );

@@ -1,9 +1,13 @@
 import path from "node:path";
 import { existsSync } from "node:fs";
-import jiti from "jiti";
-import { type QdrantSyncConfig } from "./types";
+import { createJiti } from "jiti";
+import { QdrantSyncConfigSchema, type QdrantSyncConfig } from "./types";
 
-export function loadUserConfig(): QdrantSyncConfig {
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+export async function loadUserConfig(): Promise<QdrantSyncConfig> {
   const cwd = process.cwd();
   const configPath = path.resolve(cwd, "qdrant-sync.config.ts");
 
@@ -11,12 +15,18 @@ export function loadUserConfig(): QdrantSyncConfig {
     throw new Error(`Config file not found: ${configPath}`);
   }
 
-  const load = jiti(cwd);
-  const mod = load(configPath);
+  const jiti = createJiti(cwd);
+  const mod: unknown = await jiti.import(configPath);
 
-  if (!("default" in mod)) {
+  if (!isRecord(mod) || !("default" in mod)) {
     throw new Error(`Default export not found in ${configPath}`);
   }
 
-  return mod.default;
+  const parsed = QdrantSyncConfigSchema.safeParse(mod["default"]);
+
+  if (!parsed.success) {
+    throw new Error(`Invalid config in ${configPath}: ${parsed.error.message}`);
+  }
+
+  return parsed.data;
 }

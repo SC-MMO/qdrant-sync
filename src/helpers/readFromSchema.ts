@@ -1,13 +1,13 @@
 import * as Path from "path";
-import { CanonicalCollectionSchema } from "./types";
+import { CanonicalCollectionSchema, type CanonicalCollection } from "./types";
 import fs from "fs";
 import { readYaml } from "./fileHelper.js";
 
-function readOneSchema(path: string) {
-  return readYaml(path);
+function readOneSchema(path: string): CanonicalCollection {
+  return CanonicalCollectionSchema.parse(readYaml(path));
 }
 
-function readMultipleSchemas(path: string) {
+function readMultipleSchemas(path: string): CanonicalCollection[] {
   const files = fs.readdirSync(path, { encoding: "utf8", recursive: true });
   return files
     .filter((file) => file.endsWith(".yaml") || file.endsWith(".yml"))
@@ -17,7 +17,7 @@ function readMultipleSchemas(path: string) {
 export function readFromSchema(
   path: string,
   selectedCollections: string[] | null = null,
-) {
+): Record<string, CanonicalCollection> {
   const isFile = fs.statSync(path).isFile();
 
   const collections = isFile

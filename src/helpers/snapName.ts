@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 
-export function snapName(name: string) {
+export function snapName(name: string): string {
   const now = new Date();
 
   const timestamp =

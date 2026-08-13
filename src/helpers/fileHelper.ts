@@ -2,9 +2,9 @@ import YAML from "yaml";
 import fs from "fs";
 import path from "node:path";
 
-export function readYaml(path: string): object {
+export function readYaml(path: string): unknown {
   const file = fs.readFileSync(path, "utf-8");
-  return YAML.parse(file);
+  return YAML.parse(file) as unknown;
 }
 
 export function writeYaml(path: string, content: object): void {
@@ -13,7 +13,7 @@ export function writeYaml(path: string, content: object): void {
 }
 
 export function isFile(path: string): boolean {
-  return !!fs.statSync(path).isFile();
+  return fs.statSync(path).isFile();
 }
 
 export function deleteInnerRec(dirPath: string): void {

@@ -3,11 +3,11 @@ import { deleteInnerRec, isFile, writeYaml } from "../helpers/fileHelper";
 import { loadUserConfig } from "../helpers/loadConfig";
 import path from "node:path";
 
-export async function runPull() {
+export async function runPull(): Promise<void> {
   console.log("Running pull");
 
   console.log("Fetching config...");
-  const CONFIG = loadUserConfig();
+  const CONFIG = await loadUserConfig();
 
   console.log("Fetching data...");
   const client = new QdrantSyncClient(CONFIG);
