@@ -5,7 +5,7 @@ import { writeYaml } from "../helpers/fileHelper";
 import path from "node:path";
 
 export function runSnap(args: string[]) {
-  if (args.length < 1) {
+  if (args.length < 1 || args[0] == undefined) {
     console.error("Expected snap name\nUsage: qdrant-sync snap <name>");
     process.exit(1);
   }

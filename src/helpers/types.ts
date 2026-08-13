@@ -1,3 +1,6 @@
+import type { QdrantClient } from "@qdrant/js-client-rest";
+import { z } from "zod";
+
 export type QdrantSyncConfig = {
   schema: string;
   snaps: string;
@@ -8,95 +11,92 @@ export type QdrantSyncConfig = {
   selectedCollections: string[] | null;
 };
 
-import { z } from "zod";
+export type CreateCollectionParams = Parameters<
+  QdrantClient["createCollection"]
+>[1];
 
-const VectorConfigSchema = z.object({
-  size: z.number(),
-  distance: z.string(),
-  hnsw_config: z
-    .object({
-      m: z.number().nullish(),
-      ef_construct: z.number().nullish(),
-      payload_m: z.number().nullish(),
-    })
-    .nullish(),
-  on_disk: z.boolean().nullish(),
-  datatype: z.string().nullish(),
-});
+const DistanceSchema = z.enum(["Cosine", "Euclid", "Dot", "Manhattan"]);
 
-const CollectionConfigSchema = z.object({
-  params: z
-    .object({
-      vectors: z
-        .union([VectorConfigSchema, z.record(z.string(), VectorConfigSchema)])
-        .nullish(),
-      shard_number: z.number().nullish(),
-      replication_factor: z.number().nullish(),
-      write_consistency_factor: z.number().nullish(),
-      on_disk_payload: z.boolean().nullish(),
-    })
-    .nullish(),
+const PayloadFieldSchema = z
+  .object({
+    data_type: z.enum([
+      "keyword",
+      "integer",
+      "float",
+      "geo",
+      "text",
+      "bool",
+      "datetime",
+      "uuid",
+    ]),
+  })
+  .strict();
 
-  hnsw_config: z
-    .object({
-      m: z.number().nullish(),
-      ef_construct: z.number().nullish(),
-      full_scan_threshold: z.number().nullish(),
-      max_indexing_threads: z.number().nullish(),
-      on_disk: z.boolean().nullish(),
-    })
-    .nullish(),
+const VectorParamsSchema = z
+  .object({
+    size: z.number(),
+    distance: DistanceSchema,
+    hnsw_config: z
+      .object({
+        m: z.number().nullable().optional(),
+        ef_construct: z.number().nullable().optional(),
+        full_scan_threshold: z.number().nullable().optional(),
+        max_indexing_threads: z.number().nullable().optional(),
+        on_disk: z.boolean().nullable().optional(),
+        payload_m: z.number().nullable().optional(),
+        inline_storage: z.boolean().nullable().optional(),
+      })
+      .nullable()
+      .optional(),
+    quantization_config: z.unknown().nullable().optional(),
+    on_disk: z.boolean().nullable().optional(),
+    datatype: z.string().nullable().optional(),
+    multivector_config: z.unknown().nullable().optional(),
+  })
+  .strict();
 
-  optimizer_config: z
-    .object({
-      deleted_threshold: z.number().nullish(),
-      vacuum_min_vector_number: z.number().nullish(),
-      default_segment_number: z.number().nullish(),
-      max_segment_size: z.number().nullish(),
-      memmap_threshold: z.number().nullish(),
-      indexing_threshold: z.number().nullish(),
-      flush_interval_sec: z.number().nullish(),
-      max_optimization_threads: z.number().nullish(),
-      prevent_unoptimized: z.boolean().nullish(),
-    })
-    .nullish(),
+const VectorsSchema = z.union([
+  VectorParamsSchema,
+  z.record(z.string(), VectorParamsSchema),
+]);
 
-  wal_config: z
-    .object({
-      wal_capacity_mb: z.number().nullish(),
-      wal_segments_ahead: z.number().nullish(),
-      wal_retain_closed: z.number().nullish(),
-    })
-    .nullish(),
+export const CreateCollectionParamsSchema = z
+  .object({
+    vectors: VectorsSchema.optional(),
+    shard_number: z.number().nullable().optional(),
+    sharding_method: z.enum(["Auto", "Custom"]).nullable().optional(),
+    replication_factor: z.number().nullable().optional(),
+    write_consistency_factor: z.number().nullable().optional(),
+    on_disk_payload: z.boolean().nullable().optional(),
+    hnsw_config: z.record(z.string(), z.unknown()).nullable().optional(),
+    optimizers_config: z.record(z.string(), z.unknown()).nullable().optional(),
+    wal_config: z.record(z.string(), z.unknown()).nullable().optional(),
+    quantization_config: z.unknown().nullable().optional(),
+    sparse_vectors: z.record(z.string(), z.unknown()).nullable().optional(),
+    strict_mode_config: z.record(z.string(), z.unknown()).nullable().optional(),
+    timeout: z.number().optional(),
+  })
+  .strict();
 
-  quantization_config: z.unknown().nullish(),
-});
+const CollectionConfigSchema = z
+  .object({
+    params: CreateCollectionParamsSchema,
+  })
+  .strict();
 
-const PayloadFieldSchema = z.object({
-  data_type: z.literal([
-    "keyword",
-    "integer",
-    "float",
-    "geo",
-    "text",
-    "bool",
-    "datetime",
-    "uuid",
-  ]),
-});
-
-export const CanonicalCollectionSchema = z.object({
-  config: CollectionConfigSchema,
-
-  payload_schema: z.record(z.string(), PayloadFieldSchema).nullish(),
-});
+export const CanonicalCollectionSchema = z
+  .object({
+    config: CollectionConfigSchema,
+    payload_schema: z
+      .record(z.string(), PayloadFieldSchema)
+      .nullable()
+      .optional(),
+  })
+  .strict();
 
 export type CanonicalCollection = z.infer<typeof CanonicalCollectionSchema>;
-
 export type CollectionInfo = {
   name: string;
 };
-
 export type PayloadSchema = NonNullable<CanonicalCollection["payload_schema"]>;
-
 export type CanonicalCollections = Record<string, CanonicalCollection>;

@@ -1,47 +1,86 @@
 import { QdrantClient } from "@qdrant/js-client-rest";
 import {
-  CanonicalCollection,
+  type CanonicalCollection,
   CanonicalCollectionSchema,
-  CollectionInfo,
-  PayloadSchema,
-  QdrantSyncConfig,
+  type CollectionInfo,
+  type CreateCollectionParams,
+  type PayloadSchema,
+  type QdrantSyncConfig,
 } from "./types";
 
 function getPayloadSchema(
   collection: CanonicalCollection | undefined,
 ): PayloadSchema {
-  return (collection?.payload_schema ?? {}) as PayloadSchema;
+  return collection?.payload_schema ?? {};
 }
 
 function isSameFieldSchema(
   a: PayloadSchema[string] | undefined,
   b: PayloadSchema[string] | undefined,
 ): boolean {
-  if (!a || !b) return a === b;
+  if (a === undefined || b === undefined) {
+    return a === b;
+  }
+
   return a.data_type === b.data_type;
 }
 
-export class QdrantSyncClient extends QdrantClient {
-  config: QdrantSyncConfig;
+function omitUndefined<T extends Record<string, unknown>>(obj: T): T {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([, value]) => value !== undefined),
+  ) as T;
+}
 
-  constructor(config: QdrantSyncConfig) {
-    super({ url: config.datasource.url, apiKey: config.datasource.apiKey });
+function toCreateCollectionParams(
+  collectionName: string,
+  collection: CanonicalCollection,
+): CreateCollectionParams {
+  const params = collection.config.params;
+
+  if (params == null) {
+    throw new Error(`Missing collection params for "${collectionName}"`);
+  }
+
+  const normalized = omitUndefined({
+    ...params,
+    vectors:
+      params.vectors == null
+        ? params.vectors
+        : Array.isArray(params.vectors)
+          ? params.vectors
+          : typeof params.vectors === "object"
+            ? omitUndefined(params.vectors)
+            : params.vectors,
+  });
+
+  return normalized as CreateCollectionParams;
+}
+
+export class QdrantSyncClient extends QdrantClient {
+  public readonly config: QdrantSyncConfig;
+
+  public constructor(config: QdrantSyncConfig) {
+    super({ ...config.datasource });
     this.config = config;
   }
 
-  async readCollectionConfigurations(): Promise<
+  public async readCollectionConfigurations(): Promise<
     Record<string, CanonicalCollection>
   > {
-    let collections: CollectionInfo[] = (
+    const collections: CollectionInfo[] = (
       await this.getCollections()
     ).collections.filter((collection) => {
       if (this.config.selectedCollections === null) {
         return true;
       }
-      return !!this.config.selectedCollections.includes(collection.name);
+
+      return this.config.selectedCollections.includes(collection.name);
     });
 
-    const enrichedCollections: any = await Promise.all(
+    const enrichedCollections: Array<{
+      name: string;
+      details: unknown;
+    }> = await Promise.all(
       collections.map(async (collection) => {
         return {
           name: collection.name,
@@ -50,8 +89,8 @@ export class QdrantSyncClient extends QdrantClient {
       }),
     );
 
-    const collectionMap: any = Object.fromEntries(
-      enrichedCollections.map((collection: any) => {
+    const entries: Array<[string, CanonicalCollection]> =
+      enrichedCollections.map((collection) => {
         const parsed = CanonicalCollectionSchema.safeParse(collection.details);
 
         if (!parsed.success) {
@@ -61,13 +100,12 @@ export class QdrantSyncClient extends QdrantClient {
         }
 
         return [collection.name, parsed.data];
-      }),
-    );
+      });
 
-    return collectionMap;
+    return Object.fromEntries(entries) as Record<string, CanonicalCollection>;
   }
 
-  async updateCollectionConfiguration(
+  public async updateCollectionConfiguration(
     collectionName: string,
     newCollection: CanonicalCollection,
     oldCollection: CanonicalCollection | undefined,
@@ -78,17 +116,14 @@ export class QdrantSyncClient extends QdrantClient {
     const newFieldNames = new Set(Object.keys(newPayloadSchema));
     const oldFieldNames = new Set(Object.keys(oldPayloadSchema));
 
-    // Remove indexes that no longer exist
     for (const oldFieldName of oldFieldNames) {
       if (!newFieldNames.has(oldFieldName)) {
         await this.deletePayloadIndex(collectionName, oldFieldName);
       }
     }
 
-    // Create or recreate changed indexes
     for (const [fieldName, fieldConfig] of Object.entries(newPayloadSchema)) {
       const oldFieldConfig = oldPayloadSchema[fieldName];
-
       const existsBefore = oldFieldConfig !== undefined;
       const changed = !isSameFieldSchema(oldFieldConfig, fieldConfig);
 
@@ -110,11 +145,13 @@ export class QdrantSyncClient extends QdrantClient {
     }
   }
 
-  async createCollectionWithConfiguration(
+  public async createCollectionWithConfiguration(
     collectionName: string,
     collection: CanonicalCollection,
   ): Promise<void> {
-    await this.createCollection(collectionName, collection.config.params);
+    const params = toCreateCollectionParams(collectionName, collection);
+
+    await this.createCollection(collectionName, params);
 
     const payloadSchema = getPayloadSchema(collection);
 
