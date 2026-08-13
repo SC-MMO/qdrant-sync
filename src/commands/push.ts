@@ -14,7 +14,7 @@ export async function runPush(args: string[]) {
   console.log(`Determined origin to be ${origin}`);
 
   console.log("Reading data...");
-  const data = readFromSchema(origin);
+  const data = readFromSchema(origin, CONFIG.selectedCollections);
 
   console.log("Pushing data...");
   const client = new QdrantSyncClient(CONFIG);
@@ -25,7 +25,7 @@ export async function runPush(args: string[]) {
   );
 
   const oldData: CanonicalCollections =
-    await client.readCollectionConfiguration();
+    await client.readCollectionConfigurations();
 
   for (const [collectionName, newCollection] of Object.entries(data)) {
     if (existingCollectionNames.has(collectionName)) {

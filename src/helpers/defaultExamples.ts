@@ -7,6 +7,7 @@ const CONFIG: QdrantSyncConfig = {
     url: readKeyOrThrow("QDRANT_REST_URL"),
     apiKey: readKey("QDRANT_API_KEY"),
   },
+  selectedCollections: null,
 };
 
 export default CONFIG;

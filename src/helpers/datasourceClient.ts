@@ -29,11 +29,17 @@ export class QdrantSyncClient extends QdrantClient {
     this.config = config;
   }
 
-  async readCollectionConfiguration(): Promise<
+  async readCollectionConfigurations(): Promise<
     Record<string, CanonicalCollection>
   > {
-    const collections: CollectionInfo[] = (await this.getCollections())
-      .collections;
+    let collections: CollectionInfo[] = (
+      await this.getCollections()
+    ).collections.filter((collection) => {
+      if (this.config.selectedCollections === null) {
+        return true;
+      }
+      return !!this.config.selectedCollections.includes(collection.name);
+    });
 
     const enrichedCollections: any = await Promise.all(
       collections.map(async (collection) => {

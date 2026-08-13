@@ -11,7 +11,7 @@ export async function runPull() {
 
   console.log("Fetching data...");
   const client = new QdrantSyncClient(CONFIG);
-  const data = await client.readCollectionConfiguration();
+  const data = await client.readCollectionConfigurations();
 
   console.log("Writing data...");
 
