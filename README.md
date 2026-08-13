@@ -81,3 +81,24 @@ qdrant-sync push
 
 > `push` is unfinished and dangerous
 
+## Changing the package
+
+### Validate your code
+
+```bash
+pnpm run typecheck
+pnpm run lint
+```
+
+### Change version details
+
+```bash
+# edit the package.json version argument
+```
+
+### Build package
+
+```bash
+pnpm run build
+pnpm run pack
+```
