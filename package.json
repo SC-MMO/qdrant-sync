@@ -8,7 +8,9 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/cli.ts src/index.ts --format cjs --dts --outDir dist --clean"
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --max-warnings 0",
+    "build": "npm run typecheck && tsup src/cli.ts src/index.ts --format cjs --dts --outDir dist --clean"
   },
   "exports": {
     ".": {
@@ -18,13 +20,16 @@
     }
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/node": "^26.1.2",
+    "globals": "^17.11.0",
     "tsup": "^8.0.0",
     "typescript": "^5.0.0"
   },
   "dependencies": {
     "@qdrant/js-client-rest": "^1.19.0",
     "dotenv": "^17.4.2",
+    "eslint": "^10.8.1",
     "jiti": "^2.7.0",
     "yaml": "^2.9.0",
     "zod": "^4.4.3"
