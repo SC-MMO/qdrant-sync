@@ -6,7 +6,7 @@ import {
   DEFAULT_SCHEMA,
 } from "../helpers/defaultExamples";
 
-export function runInit() {
+export function runInit(): void {
   const cwd = process.cwd();
 
   const configPath = path.resolve(cwd, "qdrant-sync.config.ts");

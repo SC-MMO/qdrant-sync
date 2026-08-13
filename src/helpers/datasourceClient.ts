@@ -32,14 +32,9 @@ function omitUndefined<T extends Record<string, unknown>>(obj: T): T {
 }
 
 function toCreateCollectionParams(
-  collectionName: string,
   collection: CanonicalCollection,
 ): CreateCollectionParams {
   const params = collection.config.params;
-
-  if (params == null) {
-    throw new Error(`Missing collection params for "${collectionName}"`);
-  }
 
   const normalized = omitUndefined({
     ...params,
@@ -60,7 +55,16 @@ export class QdrantSyncClient extends QdrantClient {
   public readonly config: QdrantSyncConfig;
 
   public constructor(config: QdrantSyncConfig) {
-    super({ ...config.datasource });
+    const params = config.datasource.apiKey
+      ? {
+          url: config.datasource.url,
+          apiKey: config.datasource.apiKey,
+        }
+      : {
+          url: config.datasource.url,
+        };
+
+    super(params);
     this.config = config;
   }
 
@@ -77,10 +81,10 @@ export class QdrantSyncClient extends QdrantClient {
       return this.config.selectedCollections.includes(collection.name);
     });
 
-    const enrichedCollections: Array<{
+    const enrichedCollections: {
       name: string;
       details: unknown;
-    }> = await Promise.all(
+    }[] = await Promise.all(
       collections.map(async (collection) => {
         return {
           name: collection.name,
@@ -89,8 +93,8 @@ export class QdrantSyncClient extends QdrantClient {
       }),
     );
 
-    const entries: Array<[string, CanonicalCollection]> =
-      enrichedCollections.map((collection) => {
+    const entries: [string, CanonicalCollection][] = enrichedCollections.map(
+      (collection) => {
         const parsed = CanonicalCollectionSchema.safeParse(collection.details);
 
         if (!parsed.success) {
@@ -100,9 +104,10 @@ export class QdrantSyncClient extends QdrantClient {
         }
 
         return [collection.name, parsed.data];
-      });
+      },
+    );
 
-    return Object.fromEntries(entries) as Record<string, CanonicalCollection>;
+    return Object.fromEntries(entries);
   }
 
   public async updateCollectionConfiguration(
@@ -149,7 +154,7 @@ export class QdrantSyncClient extends QdrantClient {
     collectionName: string,
     collection: CanonicalCollection,
   ): Promise<void> {
-    const params = toCreateCollectionParams(collectionName, collection);
+    const params = toCreateCollectionParams(collection);
 
     await this.createCollection(collectionName, params);
 

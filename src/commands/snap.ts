@@ -4,7 +4,7 @@ import { snapName } from "../helpers/snapName";
 import { writeYaml } from "../helpers/fileHelper";
 import path from "node:path";
 
-export function runSnap(args: string[]) {
+export async function runSnap(args: string[]): Promise<void> {
   if (args.length < 1 || args[0] == undefined) {
     console.error("Expected snap name\nUsage: qdrant-sync snap <name>");
     process.exit(1);
@@ -13,7 +13,7 @@ export function runSnap(args: string[]) {
   console.log("Running snap");
 
   console.log("Fetching config...");
-  const CONFIG = loadUserConfig();
+  const CONFIG = await loadUserConfig();
 
   const origin = CONFIG.schema;
   console.log(`Determined origin to be ${origin}`);

@@ -1,15 +1,17 @@
 import type { QdrantClient } from "@qdrant/js-client-rest";
 import { z } from "zod";
 
-export type QdrantSyncConfig = {
-  schema: string;
-  snaps: string;
-  datasource: {
-    url: string;
-    apiKey?: string;
-  };
-  selectedCollections: string[] | null;
-};
+export const QdrantSyncConfigSchema = z.object({
+  schema: z.string(),
+  snaps: z.string(),
+  datasource: z.object({
+    url: z.string(),
+    apiKey: z.string().optional(),
+  }),
+  selectedCollections: z.array(z.string()).nullable(),
+});
+
+export type QdrantSyncConfig = z.infer<typeof QdrantSyncConfigSchema>;
 
 export type CreateCollectionParams = Parameters<
   QdrantClient["createCollection"]
@@ -95,8 +97,8 @@ export const CanonicalCollectionSchema = z
   .strict();
 
 export type CanonicalCollection = z.infer<typeof CanonicalCollectionSchema>;
-export type CollectionInfo = {
+export interface CollectionInfo {
   name: string;
-};
+}
 export type PayloadSchema = NonNullable<CanonicalCollection["payload_schema"]>;
 export type CanonicalCollections = Record<string, CanonicalCollection>;
