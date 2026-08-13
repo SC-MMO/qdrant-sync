@@ -1,7 +1,7 @@
 import { QdrantSyncClient } from "../helpers/datasourceClient";
 import { loadUserConfig } from "../helpers/loadConfig";
 import { readFromSchema } from "../helpers/readFromSchema";
-import { CanonicalCollections } from "../helpers/types";
+import { type CanonicalCollections } from "../helpers/types";
 
 export async function runPush(args: string[]) {
   console.log("Running push");
@@ -10,7 +10,7 @@ export async function runPush(args: string[]) {
   console.log("Fetching config...");
   const CONFIG = loadUserConfig();
 
-  const origin = args.length >= 1 ? args[0] : CONFIG.schema;
+  const origin = args[0] ?? CONFIG.schema;
   console.log(`Determined origin to be ${origin}`);
 
   console.log("Reading data...");

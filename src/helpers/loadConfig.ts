@@ -1,7 +1,7 @@
 import path from "node:path";
 import { existsSync } from "node:fs";
 import jiti from "jiti";
-import { QdrantSyncConfig } from "./types";
+import { type QdrantSyncConfig } from "./types";
 
 export function loadUserConfig(): QdrantSyncConfig {
   const cwd = process.cwd();
