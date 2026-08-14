@@ -3,14 +3,13 @@ import { loadUserConfig } from '../helpers/loadConfig';
 import { readFromSchema } from '../helpers/readFromSchema';
 import { type CanonicalCollections } from '../helpers/types';
 
-export async function runPush(args: string[]): Promise<void> {
+export async function runPush(file: string | null = null): Promise<void> {
 	console.log('Running push');
-	console.log('Args:', args);
 
 	console.log('Fetching config...');
 	const CONFIG = await loadUserConfig();
 
-	const origin = args[0] ?? CONFIG.schema;
+	const origin = file ?? CONFIG.schema;
 	console.log(`Determined origin to be ${origin}`);
 
 	console.log('Reading data...');
