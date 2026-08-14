@@ -28,14 +28,14 @@ program
 program
 	.command('snap')
 	.description('Create a snap of your schema')
-	.requiredOption('-n, --name', 'Name of the snap')
+	.argument('<name>', 'Name of the snap')
 	.action((args: { name: string }) => {
 		void runSnap(args.name);
 	});
 program
 	.command('push')
 	.description('Push a schema or snap to Qdrant')
-	.option('-s, --source', 'Source of the schema to be pushed')
+	.argument('[source]', 'Source of the schema to be pushed')
 	.action((args: { source?: string }) => {
 		void (args.source ? runPush(args.source) : runPush());
 	});
