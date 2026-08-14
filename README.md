@@ -8,7 +8,7 @@ Small CLI for keeping Qdrant collection configuration in YAML files so it can be
 git clone https://github.com/SC-MMO/qdrant-sync.git
 cd qdrant-sync
 pnpm run build
-pnpm run pack
+pnpm pack
 ```
 
 ## Installation
