@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import { Command } from 'commander';
 import { runInit } from './commands/init';
 import { runPull } from './commands/pull';
