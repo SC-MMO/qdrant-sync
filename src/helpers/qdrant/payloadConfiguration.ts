@@ -4,10 +4,7 @@ export function getPayloadSchema(collection: CanonicalCollection | undefined): P
 	return collection?.payload_schema ?? {};
 }
 
-export function isSamePayloadFieldSchema(
-	a: PayloadSchema[string] | undefined,
-	b: PayloadSchema[string] | undefined,
-): boolean {
+export function isSamePayloadFieldSchema(a: PayloadSchema[string] | undefined, b: PayloadSchema[string] | undefined): boolean {
 	if (a === undefined || b === undefined) {
 		return a === b;
 	}
