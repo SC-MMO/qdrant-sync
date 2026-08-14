@@ -1,4 +1,4 @@
-import { QdrantSyncClient } from '../helpers/datasourceClient';
+import { QdrantSyncClient } from '../helpers/qdrant';
 import { deleteInnerRec, isFile, writeYaml } from '../helpers/fileHelper';
 import { loadUserConfig } from '../helpers/loadConfig';
 import path from 'node:path';
@@ -25,7 +25,7 @@ export async function runPull(): Promise<void> {
 			const fp = path.join(CONFIG.schema, `${key}.qdrant-orm.yaml`);
 			const partialData = { [key]: value };
 			writeYaml(fp, partialData);
-			console.log(`Wrote schema to ${CONFIG.schema}`);
+			console.log(`Wrote schema to ${fp}`);
 		}
 	}
 }
