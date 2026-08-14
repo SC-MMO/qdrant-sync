@@ -2,12 +2,21 @@
 
 Small CLI for keeping Qdrant collection configuration in YAML files so it can be versioned, reviewed, and restored.
 
+## Building
+
+```bash
+git clone https://github.com/SC-MMO/qdrant-sync.git
+cd qdrant-sync
+pnpm run build
+pnpm run pack
+```
+
 ## Installation
 
 Add the package to your project:
 
 ```bash
-[npm/pnpm/yarn/bun] add <pathToThePackage>
+pnpm add <pathToThePackage>
 ```
 
 ## Setup
@@ -15,7 +24,7 @@ Add the package to your project:
 Initialize qdrant-sync in your project:
 
 ```bash
-qdrant-sync init
+pnpm qdrant-sync init
 ```
 
 This creates:
@@ -45,7 +54,7 @@ selectedCollections: ['knowledge-management'];
 ### Pull configuration from Qdrant
 
 ```bash
-qdrant-sync pull
+pnpm qdrant-sync pull
 ```
 
 Reads the configured collections from Qdrant and writes them to the local schema.
@@ -53,7 +62,7 @@ Reads the configured collections from Qdrant and writes them to the local schema
 ### Create a local snapshot
 
 ```bash
-qdrant-sync snap before-change
+pnpm qdrant-sync snap before-change
 ```
 
 Stores the current local schema in `qdrant-sync/snaps/`.
@@ -62,22 +71,22 @@ Stores the current local schema in `qdrant-sync/snaps/`.
 ### Push the local schema to Qdrant
 
 ```bash
-qdrant-sync push
+pnpm qdrant-sync push
 ```
 
 To push a specific snapshot or schema file instead:
 
 ```bash
-qdrant-sync push qdrant-sync/snaps/<snapshot>.yaml
+pnpm qdrant-sync push qdrant-sync/snaps/<snapshot>.yaml
 ```
 
 ## Typical workflow
 
 ```bash
-qdrant-sync pull
-qdrant-sync snap before-change
+pnpm qdrant-sync pull
+pnpm qdrant-sync snap before-change
 # edit the YAML schema
-qdrant-sync push
+pnpm qdrant-sync push
 ```
 
 > `push` is unfinished and dangerous
@@ -95,11 +104,5 @@ pnpm run lint
 
 ```bash
 # edit the package.json version argument
-```
-
-### Build package
-
-```bash
-pnpm run build
-pnpm run pack
+# edit the src/cli.ts version argument
 ```
