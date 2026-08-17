@@ -26,6 +26,9 @@ importers:
       jiti:
         specifier: ^2.7.0
         version: 2.7.0
+      qdrant-sync:
+        specifier: file:qdrant-sync-1.0.0.tgz
+        version: file:qdrant-sync-1.0.0.tgz(typescript@5.9.3)
       typescript-eslint:
         specifier: ^8.67.0
         version: 8.67.0(eslint@10.8.1(jiti@2.7.0))(typescript@5.9.3)
@@ -829,6 +832,11 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
 
+  qdrant-sync@file:qdrant-sync-1.0.0.tgz:
+    resolution: {integrity: sha512-BiV1rje9XZuAHVmzPrBddFuBzuvrMGraN3BDf66GY0Ox4DjlZHoF4QQgaCtRHo6xhMHxVPyHiK19g5defY7XdQ==, tarball: file:qdrant-sync-1.0.0.tgz}
+    version: 1.0.0
+    hasBin: true
+
   readdirp@4.1.2:
     resolution: {integrity: sha512-GDhwkLfywWL2s6vEjyhri+eXmfH6j1L7JE27WhqLeYzoh/A3DBaYGEj2H/HFZCn/kMfim73FXxEJTw06WtxQwg==}
     engines: {node: '>= 14.18.0'}
@@ -1598,6 +1606,21 @@ snapshots:
   prelude-ls@1.2.1: {}
 
   punycode@2.3.1: {}
+
+  qdrant-sync@file:qdrant-sync-1.0.0.tgz(typescript@5.9.3):
+    dependencies:
+      '@qdrant/js-client-rest': 1.17.0(typescript@5.9.3)
+      '@typescript-eslint/parser': 8.67.0(eslint@10.8.1(jiti@2.7.0))(typescript@5.9.3)
+      commander: 15.0.0
+      dotenv: 17.4.2
+      eslint: 10.8.1(jiti@2.7.0)
+      jiti: 2.7.0
+      typescript-eslint: 8.67.0(eslint@10.8.1(jiti@2.7.0))(typescript@5.9.3)
+      yaml: 2.9.0
+      zod: 4.4.3
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
 
   readdirp@4.1.2: {}
 
