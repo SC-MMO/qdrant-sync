@@ -4,8 +4,10 @@ const CONFIG: QdrantSyncConfig = {
   schema: "qdrant-sync/schema.qdrant-sync.yaml",
   snaps: "qdrant-sync/snaps",
   datasource: {
-    url: readKeyOrThrow("QDRANT_REST_URL"),
-    apiKey: readKey("QDRANT_API_KEY"),
+    host: readKeyOrThrow("QDRANT_REST_HOST"),
+    port: readKey("QDRANT_REST_PORT"),
+    https: readKey("QDRANT_REST_IS_HTTPS"),
+    apiKey: readKey("QDRANT_REST_API_KEY"),
   },
   selectedCollections: null,
 };

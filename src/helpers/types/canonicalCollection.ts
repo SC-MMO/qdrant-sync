@@ -1,20 +1,4 @@
-import type { QdrantClient } from '@qdrant/js-client-rest';
 import { z } from 'zod';
-
-export const QdrantSyncConfigSchema = z.object({
-	schema: z.string(),
-	snaps: z.string(),
-	datasource: z.object({
-		url: z.string(),
-		apiKey: z.string().optional(),
-	}),
-	selectedCollections: z.array(z.string()).nullable(),
-});
-
-export type QdrantSyncConfig = z.infer<typeof QdrantSyncConfigSchema>;
-
-export type CreateCollectionParams = Parameters<QdrantClient['createCollection']>[1];
-export type UpdateCollectionParams = Parameters<QdrantClient['updateCollection']>[1];
 
 const DistanceSchema = z.enum(['Cosine', 'Euclid', 'Dot', 'Manhattan']);
 
