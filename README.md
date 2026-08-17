@@ -89,7 +89,7 @@ pnpm qdrant-sync snap before-change
 pnpm qdrant-sync push
 ```
 
-> `push` is unfinished and dangerous
+> `push` is dangerous
 
 ## Changing the package
 
