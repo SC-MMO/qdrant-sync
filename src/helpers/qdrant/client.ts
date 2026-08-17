@@ -8,14 +8,7 @@ export class QdrantSyncClient {
 	private readonly client: QdrantClient;
 
 	public constructor(config: QdrantSyncConfig) {
-		const params = config.datasource.apiKey
-			? {
-					url: config.datasource.url,
-					apiKey: config.datasource.apiKey,
-				}
-			: {
-					url: config.datasource.url,
-				};
+		const params = Object.fromEntries(Object.entries(config.datasource).filter(([_key, value]) => value !== undefined));
 
 		this.client = new QdrantClient(params);
 		this.config = config;
