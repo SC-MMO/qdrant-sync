@@ -62,5 +62,8 @@ export const DEFAULT_SCHEMA = `knowledge-management:
       data_type: integer
 `;
 
-export const DEFAULT_ENV_EXAMPLE = `QDRANT_REST_URL="http://localhost:6333"
-QDRANT_API_KEY="abcdefg"`;
+export const DEFAULT_ENV_EXAMPLE = `
+QDRANT_REST_API_KEY="abcdefg"
+QDRANT_REST_HOST="localhost"
+QDRANT_REST_PORT=6333
+QDRANT_REST_IS_HTTPS=false`;
