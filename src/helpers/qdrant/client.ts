@@ -14,6 +14,10 @@ export class QdrantSyncClient {
 		this.config = config;
 	}
 
+	get internalClient(): QdrantClient {
+		return this.client;
+	}
+
 	public async readCollectionConfigurations(): Promise<Record<string, CanonicalCollection>> {
 		const collections = await this.readSelectedCollections();
 		const entries = await Promise.all(
