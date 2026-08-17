@@ -1,12 +1,12 @@
-export const DEFAULT_CONFIG = `import { QdrantSyncConfig, readKey, readKeyOrThrow } from "qdrant-sync";
+export const DEFAULT_CONFIG = `import { QdrantSyncConfig, readKeyOrThrow } from "qdrant-sync";
 
 const CONFIG: QdrantSyncConfig = {
   schema: "qdrant-sync/schema.qdrant-sync.yaml",
   snaps: "qdrant-sync/snaps",
   datasource: {
     host: readKeyOrThrow("QDRANT_REST_HOST"),
-    port: readKey("QDRANT_REST_PORT"),
-    https: readKey("QDRANT_REST_IS_HTTPS"),
+    port: readKeyOrThrow("QDRANT_REST_PORT") || null,
+    https: readKeyOrThrow("QDRANT_REST_IS_HTTPS"),
     apiKey: readKey("QDRANT_REST_API_KEY"),
   },
   selectedCollections: null,
