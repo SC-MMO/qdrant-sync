@@ -5,7 +5,7 @@ const CONFIG: QdrantSyncConfig = {
   snaps: "qdrant-sync/snaps",
   datasource: {
     host: readKeyOrThrow("QDRANT_REST_HOST"),
-    port: readKeyOrThrow("QDRANT_REST_PORT") || null,
+    port: readKey("QDRANT_REST_PORT") || null,
     https: readKeyOrThrow("QDRANT_REST_IS_HTTPS"),
     apiKey: readKey("QDRANT_REST_API_KEY"),
   },
