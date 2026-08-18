@@ -1,4 +1,4 @@
-export const DEFAULT_CONFIG = `import { QdrantSyncConfig, readKey, readKeyOrThrow } from "qdrant-sync";
+export const DEFAULT_CONFIG = `import { type QdrantSyncConfig, readKey, readKeyOrThrow } from "qdrant-sync";
 
 const CONFIG: QdrantSyncConfig = {
   schema: "qdrant-sync/schema.qdrant-sync.yaml",
