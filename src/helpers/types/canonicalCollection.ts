@@ -16,7 +16,7 @@ const HnswConfigSchema = z
 		payload_m: z.number().nullable().optional(),
 		inline_storage: z.boolean().nullable().optional(),
 	})
-	.loose();
+	.strip();
 
 const VectorParamsSchema = z
 	.object({
@@ -28,7 +28,7 @@ const VectorParamsSchema = z
 		datatype: z.string().nullable().optional(),
 		multivector_config: z.unknown().nullable().optional(),
 	})
-	.loose();
+	.strip();
 
 const VectorsSchema = z.union([VectorParamsSchema, z.record(z.string(), VectorParamsSchema)]);
 
@@ -37,7 +37,7 @@ const SparseVectorParamsSchema = z
 		index: UnknownConfigObjectSchema.nullable().optional(),
 		modifier: z.string().nullable().optional(),
 	})
-	.loose();
+	.strip();
 
 const SparseVectorsSchema = z.record(z.string(), SparseVectorParamsSchema);
 
@@ -54,7 +54,7 @@ export const CollectionParamsSchema = z
 		sparse_vectors: SparseVectorsSchema.nullable().optional(),
 		on_disk_payload: z.boolean().nullable().optional(),
 	})
-	.loose();
+	.strip();
 
 export const CreateCollectionParamsSchema = z
 	.object({
@@ -74,7 +74,7 @@ export const CreateCollectionParamsSchema = z
 		on_disk_payload: z.boolean().nullable().optional(),
 		timeout: z.number().optional(),
 	})
-	.loose();
+	.strip();
 
 export const CollectionConfigSchema = z
 	.object({
@@ -86,16 +86,15 @@ export const CollectionConfigSchema = z
 		strict_mode_config: UnknownConfigObjectSchema.nullable().optional(),
 		metadata: z.record(z.string(), z.unknown()).nullable().optional(),
 	})
-	.loose();
+	.strip();
 
 const PayloadDataTypeSchema = z.enum(['keyword', 'integer', 'float', 'geo', 'text', 'bool', 'datetime', 'uuid']);
 
 export const PayloadFieldSchema = z
 	.object({
 		data_type: PayloadDataTypeSchema,
-		params: z.unknown().nullable().optional(),
 	})
-	.loose();
+	.strip();
 
 export const CanonicalCollectionSchema = z.object({
 	config: CollectionConfigSchema,
