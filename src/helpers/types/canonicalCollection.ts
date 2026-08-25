@@ -94,7 +94,6 @@ export const PayloadFieldSchema = z
 	.object({
 		data_type: PayloadDataTypeSchema,
 		params: z.unknown().nullable().optional(),
-		points: z.number().nullable().optional(),
 	})
 	.loose();
 
