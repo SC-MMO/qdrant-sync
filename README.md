@@ -89,8 +89,6 @@ pnpm qdrant-sync snap before-change
 pnpm qdrant-sync push
 ```
 
-> `push` is dangerous
-
 ## Changing the package
 
 ### Validate your code
