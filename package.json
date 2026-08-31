@@ -10,7 +10,7 @@
 	"scripts": {
 		"typecheck": "tsc --noEmit",
 		"lint": "eslint . --max-warnings 0",
-		"build": "npm run typecheck && npm run lint && tsup src/cli.ts src/index.ts --format cjs --dts --outDir dist --clean"
+		"build": "npm run typecheck && npm run lint && tsup src/cli.ts src/index.ts --format esm --dts --outDir dist --clean"
 	},
 	"exports": {
 		".": {
