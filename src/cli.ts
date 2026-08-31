@@ -10,7 +10,7 @@ const program = new Command();
 program
 	.name('qdrant-sync')
 	.description('Small CLI for keeping Qdrant collection configuration in YAML files so it can be versioned, reviewed, and restored.')
-	.version('1.0.0');
+	.version('0.0.1');
 
 program
 	.command('init')
