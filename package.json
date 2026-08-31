@@ -2,7 +2,7 @@
 	"name": "qdrant-sync",
 	"version": "0.0.2",
 	"bin": {
-		"qdrant-sync": "./dist/cli.js"
+		"qdrant-sync": "./dist/cli.mjs"
 	},
 	"files": [
 		"dist"
@@ -14,9 +14,9 @@
 	},
 	"exports": {
 		".": {
-			"types": "./dist/index.d.ts",
-			"require": "./dist/index.js",
-			"import": "./dist/index.js"
+			"types": "./dist/index.d.mts",
+			"require": "./dist/index.mjs",
+			"import": "./dist/index.mjs"
 		}
 	},
 	"devDependencies": {
