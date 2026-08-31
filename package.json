@@ -1,6 +1,6 @@
 {
 	"name": "qdrant-sync",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"bin": {
 		"qdrant-sync": "./dist/cli.mjs"
 	},
